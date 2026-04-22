@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domain RAG Executive Manager</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel-soft: #f9fafc;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --blue: #2563eb;
+      --blue-soft: #dbeafe;
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+      --yellow: #ca8a04;
+      --yellow-soft: #fef3c7;
+      --red: #dc2626;
+      --red-soft: #fee2e2;
+      --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #f8fafc 0%, #f5f7fb 100%);
+      color: var(--text);
+    }
+
+    .app {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 780px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button, .file-label {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s ease;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    button:hover, .file-label:hover { transform: translateY(-1px); }
+
+    .primary {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+
+    .danger {
+      color: var(--red);
+      border-color: #fecaca;
+      background: #fff5f5;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: inherit;
+      background: white;
+      color: var(--text);
+    }
+
+    textarea { min-height: 84px; resize: vertical; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+    }
+
+    .subhead {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .kpi {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .kpi .value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .green { color: var(--green); }
+    .yellow { color: var(--yellow); }
+    .red { color: var(--red); }
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .summary-card {
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .summary-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .summary-card p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #374151;
+    }
+
+    .summary-card.green { background: var(--green-soft); }
+    .summary-card.yellow { background: var(--yellow-soft); }
+    .summary-card.red { background: var(--red-soft); }
+
+    .heatmap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .heat-cell {
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 110px;
+      border: 1px solid var(--border);
+    }
+
+    .heat-cell h4 {
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .heat-cell.green { background: var(--green-soft); }
+    .heat-cell.yellow { background: var(--yellow-soft); }
+    .heat-cell.red { background: var(--red-soft); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .full { grid-column: 1 / -1; }
+    .stack { display: grid; gap: 12px; }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1050px;
+      background: white;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f9fafb;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .badge.green { background: rgba(22, 163, 74, 0.12); color: var(--green); }
+    .badge.yellow { background: rgba(234, 179, 8, 0.16); color: #a16207; }
+    .badge.red { background: rgba(220, 38, 38, 0.12); color: var(--red); }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .muted-box, .exec-note {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      background: var(--panel-soft);
+    }
+
+    .small { color: var(--muted); font-size: 12px; }
+    .hidden { display: none; }
+
+    @media (max-width: 1100px) {
+      .hero-grid, .grid {
+        grid-template-columns: 1fr;
+      }
+      .kpis {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .toolbar, .form-grid, .summary-strip, .heatmap {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="title">
+        <h1>Domain RAG Executive Manager</h1>
+        <p>Executive-ready portfolio dashboard to track green / yellow / red by domain, highlight key issues, and surface mitigation actions for leadership review.</p>
+      </div>
+      <div class="actions">
+        <button id="seedBtn">Load Sample Data</button>
+        <button id="exportBtn">Export JSON</button>
+        <label class="file-label" for="importFile">Import JSON</label>
+        <input id="importFile" type="file" accept="application/json" class="hidden" />
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="label">Total Domains</div><div class="value" id="totalCount">0</div></div>
+      <div class="kpi"><div class="label">Green</div><div class="value green" id="greenCount">0</div></div>
+      <div class="kpi"><div class="label">Yellow</div><div class="value yellow" id="yellowCount">0</div></div>
+      <div class="kpi"><div class="label">Red</div><div class="value red" id="redCount">0</div></div>
+      <div class="kpi"><div class="label">Portfolio Health</div><div class="value" id="healthScore">0%</div></div>
+    </div>
+
+    <div class="hero-grid" style="margin-top:18px;">
+      <div class="panel">
+        <div class="subhead">Executive Summary</div>
+        <div class="summary-strip">
+          <div class="summary-card green">
+            <h3>Stable Domains</h3>
+            <p id="greenSummary">No green domains yet.</p>
+          </div>
+          <div class="summary-card yellow">
+            <h3>Watchlist Domains</h3>
+            <p id="yellowSummary">No yellow domains yet.</p>
+          </div>
+          <div class="summary-card red">
+            <h3>Critical Domains</h3>
+            <p id="redSummary">No red domains yet.</p>
+          </div>
+        </div>
+        <div class="exec-note" id="portfolioNarrative">Add domains to generate a portfolio-level narrative.</div>
+      </div>
+
+      <div class="panel">
+        <div class="subhead">Domain Heatmap</div>
+        <div class="heatmap">
+          <div class="heat-cell green">
+            <h4>Green</h4>
+            <div class="pill-list" id="greenHeat"></div>
+          </div>
+          <div class="heat-cell yellow">
+            <h4>Yellow</h4>
+            <div class="pill-list" id="yellowHeat"></div>
+          </div>
+          <div class="heat-cell red">
+            <h4>Red</h4>
+            <div class="pill-list" id="redHeat"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h2 id="formTitle">Add Domain</h2>
+        <form id="domainForm" class="stack">
+          <div class="form-grid">
+            <div>
+              <label>Domain Name</label>
+              <input id="domainName" required placeholder="e.g., Claims, Underwriting, Finance" />
+            </div>
+            <div>
+              <label>Owner</label>
+              <input id="owner" placeholder="e.g., Jane Smith" />
+            </div>
+            <div>
+              <label>Status</label>
+              <select id="status">
+                <option value="Green">Green</option>
+                <option value="Yellow">Yellow</option>
+                <option value="Red">Red</option>
+              </select>
+            </div>
+            <div>
+              <label>Last Updated</label>
+              <input id="lastUpdated" type="date" />
+            </div>
+            <div class="full">
+              <label>Key Risk / Issue</label>
+              <textarea id="risk" placeholder="What is driving the current status?"></textarea>
+            </div>
+            <div class="full">
+              <label>Mitigation / Next Step</label>
+              <textarea id="mitigation" placeholder="What is the recovery plan or next action?"></textarea>
+            </div>
+          </div>
+          <div class="row-actions">
+            <button class="primary" type="submit" id="saveBtn">Save Domain</button>
+            <button type="button" id="resetBtn">Clear</button>
+          </div>
+        </form>
+        <div class="muted-box">
+          Single-file HTML app with local browser storage. Useful for quick leadership reviews, working sessions, or lightweight portfolio tracking without a backend.
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Portfolio View</h2>
+        <div class="toolbar">
+          <input id="searchInput" placeholder="Search domain, owner, risk, or mitigation" />
+          <select id="statusFilter">
+            <option value="All">All Statuses</option>
+            <option value="Green">Green</option>
+            <option value="Yellow">Yellow</option>
+            <option value="Red">Red</option>
+          </select>
+          <select id="sortBy">
+            <option value="updatedDesc">Sort: Latest Update</option>
+            <option value="nameAsc">Sort: Domain A-Z</option>
+            <option value="status">Sort: Status</option>
+          </select>
+          <button id="clearAllBtn" class="danger">Clear All</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Domain</th>
+                <th>Owner</th>
+                <th>Status</th>
+                <th>Key Risk / Issue</th>
+                <th>Mitigation / Next Step</th>
+                <th>Last Updated</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="domainTableBody"></tbody>
+          </table>
+        </div>
+        <p class="small" id="tableFootnote">0 records shown.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'domain-rag-manager-v2';
+    let editingId = null;
+
+    const els = {
+      form: document.getElementById('domainForm'),
+      formTitle: document.getElementById('formTitle'),
+      domainName: document.getElementById('domainName'),
+      owner: document.getElementById('owner'),
+      status: document.getElementById('status'),
+      lastUpdated: document.getElementById('lastUpdated'),
+      risk: document.getElementById('risk'),
+      mitigation: document.getElementById('mitigation'),
+      saveBtn: document.getElementById('saveBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      tableBody: document.getElementById('domainTableBody'),
+      totalCount: document.getElementById('totalCount'),
+      greenCount: document.getElementById('greenCount'),
+      yellowCount: document.getElementById('yellowCount'),
+      redCount: document.getElementById('redCount'),
+      healthScore: document.getElementById('healthScore'),
+      searchInput: document.getElementById('searchInput'),
+      statusFilter: document.getElementById('statusFilter'),
+      sortBy: document.getElementById('sortBy'),
+      tableFootnote: document.getElementById('tableFootnote'),
+      clearAllBtn: document.getElementById('clearAllBtn'),
+      exportBtn: document.getElementById('exportBtn'),
+      importFile: document.getElementById('importFile'),
+      seedBtn: document.getElementById('seedBtn'),
+      greenSummary: document.getElementById('greenSummary'),
+      yellowSummary: document.getElementById('yellowSummary'),
+      redSummary: document.getElementById('redSummary'),
+      greenHeat: document.getElementById('greenHeat'),
+      yellowHeat: document.getElementById('yellowHeat'),
+      redHeat: document.getElementById('redHeat'),
+      portfolioNarrative: document.getElementById('portfolioNarrative')
+    };
+
+    const sampleData = [
+      {
+        id: crypto.randomUUID(),
+        domainName: 'Claims',
+        owner: 'A. Patel',
+        status: 'Yellow',
+        lastUpdated: '2026-04-20',
+        risk: 'Open dependencies on data mapping and test case completion.',
+        mitigation: 'Complete defect triage and lock cutover checklist by Friday.'
+      },
+      {
+        id: crypto.randomUUID(),
+        domainName: 'Underwriting',
+        owner: 'R. Chen',
+        status: 'Green',
+        lastUpdated: '2026-04-18',
+        risk: 'No material risk; minor UAT items in progress.',
+        mitigation: 'Monitor completion and keep business sign-off on track.'
+      },
+      {
+        id: crypto.randomUUID(),
+        domainName: 'Finance',
+        owner: 'S. Miller',
+        status: 'Red',
+        lastUpdated: '2026-04-19',
+        risk: 'Delayed upstream feed impacting reconciliation and reporting.',
+        mitigation: 'Escalate vendor fix and define manual fallback for month-end.'
+      },
+      {
+        id: crypto.randomUUID(),
+        domainName: 'Policy Admin',
+        owner: 'M. Gomez',
+        status: 'Green',
+        lastUpdated: '2026-04-17',
+        risk: 'Configuration build progressing as planned.',
+        mitigation: 'Maintain current cadence and complete SIT evidence pack.'
+      },
+      {
+        id: crypto.randomUUID(),
+        domainName: 'Data & Reporting',
+        owner: 'K. Brown',
+        status: 'Yellow',
+        lastUpdated: '2026-04-21',
+        risk: 'Reporting backlog and pending sign-off on KPI definitions.',
+        mitigation: 'Prioritize executive dashboards and close metric alignment workshop.'
+      }
+    ];
+
+    function loadDomains() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveDomains(domains) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(domains));
+    }
+
+    function getBadgeClass(status) {
+      return status.toLowerCase();
+    }
+
+    function statusRank(status) {
+      return { Red: 1, Yellow: 2, Green: 3 }[status] || 99;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function getFilteredDomains() {
+      let domains = loadDomains();
+      const q = els.searchInput.value.trim().toLowerCase();
+      const statusFilter = els.statusFilter.value;
+      const sortBy = els.sortBy.value;
+
+      if (q) {
+        domains = domains.filter(d =>
+          [d.domainName, d.owner, d.status, d.risk, d.mitigation, d.lastUpdated]
+            .join(' ')
+            .toLowerCase()
+            .includes(q)
+        );
+      }
+
+      if (statusFilter !== 'All') {
+        domains = domains.filter(d => d.status === statusFilter);
+      }
+
+      domains.sort((a, b) => {
+        if (sortBy === 'nameAsc') return a.domainName.localeCompare(b.domainName);
+        if (sortBy === 'status') return statusRank(a.status) - statusRank(b.status);
+        return (b.lastUpdated || '').localeCompare(a.lastUpdated || '');
+      });
+
+      return domains;
+    }
+
+    function summarizeDomains(domains, status) {
+      const items = domains.filter(d => d.status === status).map(d => d.domainName);
+      if (!items.length) return `No ${status.toLowerCase()} domains currently.`;
+      const names = items.slice(0, 4).join(', ');
+      const suffix = items.length > 4 ? ` and ${items.length - 4} more.` : '.';
+      if (status === 'Green') return `${items.length} domain(s) tracking well: ${names}${suffix}`;
+      if (status === 'Yellow') return `${items.length} domain(s) need close monitoring: ${names}${suffix}`;
+      return `${items.length} critical domain(s) need leadership attention: ${names}${suffix}`;
+    }
+
+    function renderHeat(target, domains) {
+      target.innerHTML = '';
+      if (!domains.length) {
+        target.innerHTML = '<span class="small">None</span>';
+        return;
+      }
+      domains.forEach(d => {
+        const pill = document.createElement('span');
+        pill.className = 'pill';
+        pill.textContent = d.domainName;
+        target.appendChild(pill);
+      });
+    }
+
+    function renderExecutiveSummary(domains) {
+      const greenDomains = domains.filter(d => d.status === 'Green');
+      const yellowDomains = domains.filter(d => d.status === 'Yellow');
+      const redDomains = domains.filter(d => d.status === 'Red');
+
+      els.greenSummary.textContent = summarizeDomains(domains, 'Green');
+      els.yellowSummary.textContent = summarizeDomains(domains, 'Yellow');
+      els.redSummary.textContent = summarizeDomains(domains, 'Red');
+
+      renderHeat(els.greenHeat, greenDomains);
+      renderHeat(els.yellowHeat, yellowDomains);
+      renderHeat(els.redHeat, redDomains);
+
+      if (!domains.length) {
+        els.portfolioNarrative.textContent = 'Add domains to generate a portfolio-level narrative.';
+        return;
+      }
+
+      const total = domains.length;
+      const narrative = `${greenDomains.length} of ${total} domain(s) are green, ${yellowDomains.length} are yellow, and ${redDomains.length} are red. Focus executive attention on red domains first, stabilize yellow domains through targeted mitigation, and preserve momentum in green domains.`;
+      els.portfolioNarrative.textContent = narrative;
+    }
+
+    function renderStats(domains) {
+      const green = domains.filter(d => d.status === 'Green').length;
+      const yellow = domains.filter(d => d.status === 'Yellow').length;
+      const red = domains.filter(d => d.status === 'Red').length;
+      const total = domains.length;
+      const score = total ? Math.round(((green * 100) + (yellow * 60) + (red * 20)) / total) : 0;
+
+      els.totalCount.textContent = total;
+      els.greenCount.textContent = green;
+      els.yellowCount.textContent = yellow;
+      els.redCount.textContent = red;
+      els.healthScore.textContent = `${score}%`;
+    }
+
+    function renderTable() {
+      const allDomains = loadDomains();
+      const filtered = getFilteredDomains();
+      renderStats(allDomains);
+      renderExecutiveSummary(allDomains);
+
+      els.tableBody.innerHTML = '';
+      if (!filtered.length) {
+        els.tableBody.innerHTML = `
+          <tr>
+            <td colspan="7" class="small">No domains found. Add a domain or load sample data.</td>
+          </tr>
+        `;
+        els.tableFootnote.textContent = '0 records shown.';
+        return;
+      }
+
+      filtered.forEach(domain => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${escapeHtml(domain.domainName)}</strong></td>
+          <td>${escapeHtml(domain.owner || '-')}</td>
+          <td><span class="badge ${getBadgeClass(domain.status)}">${escapeHtml(domain.status)}</span></td>
+          <td>${escapeHtml(domain.risk || '-')}</td>
+          <td>${escapeHtml(domain.mitigation || '-')}</td>
+          <td>${escapeHtml(domain.lastUpdated || '-')}</td>
+          <td>
+            <div class="row-actions">
+              <button onclick="editDomain('${domain.id}')">Edit</button>
+              <button class="danger" onclick="deleteDomain('${domain.id}')">Delete</button>
+            </div>
+          </td>
+        `;
+        els.tableBody.appendChild(row);
+      });
+
+      els.tableFootnote.textContent = `${filtered.length} record${filtered.length === 1 ? '' : 's'} shown.`;
+    }
+
+    function resetForm() {
+      editingId = null;
+      els.form.reset();
+      els.formTitle.textContent = 'Add Domain';
+      els.saveBtn.textContent = 'Save Domain';
+      els.lastUpdated.value = new Date().toISOString().slice(0, 10);
+    }
+
+    function editDomain(id) {
+      const domains = loadDomains();
+      const item = domains.find(d => d.id === id);
+      if (!item) return;
+
+      editingId = id;
+      els.formTitle.textContent = 'Edit Domain';
+      els.saveBtn.textContent = 'Update Domain';
+      els.domainName.value = item.domainName || '';
+      els.owner.value = item.owner || '';
+      els.status.value = item.status || 'Green';
+      els.lastUpdated.value = item.lastUpdated || '';
+      els.risk.value = item.risk || '';
+      els.mitigation.value = item.mitigation || '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteDomain(id) {
+      const domains = loadDomains();
+      const updated = domains.filter(d => d.id !== id);
+      saveDomains(updated);
+      if (editingId === id) resetForm();
+      renderTable();
+    }
+
+    window.editDomain = editDomain;
+    window.deleteDomain = deleteDomain;
+
+    els.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const payload = {
+        id: editingId || crypto.randomUUID(),
+        domainName: els.domainName.value.trim(),
+        owner: els.owner.value.trim(),
+        status: els.status.value,
+        lastUpdated: els.lastUpdated.value,
+        risk: els.risk.value.trim(),
+        mitigation: els.mitigation.value.trim()
+      };
+
+      if (!payload.domainName) {
+        alert('Domain name is required.');
+        return;
+      }
+
+      const domains = loadDomains();
+      const updated = editingId
+        ? domains.map(d => d.id === editingId ? payload : d)
+        : [payload, ...domains];
+
+      saveDomains(updated);
+      resetForm();
+      renderTable();
+    });
+
+    els.resetBtn.addEventListener('click', resetForm);
+    els.searchInput.addEventListener('input', renderTable);
+    els.statusFilter.addEventListener('change', renderTable);
+    els.sortBy.addEventListener('change', renderTable);
+
+    els.clearAllBtn.addEventListener('click', () => {
+      const confirmed = confirm('Clear all saved domains? This cannot be undone.');
+      if (!confirmed) return;
+      localStorage.removeItem(STORAGE_KEY);
+      resetForm();
+      renderTable();
+    });
+
+    els.exportBtn.addEventListener('click', () => {
+      const data = loadDomains();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'domain-rag-data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    els.importFile.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (!Array.isArray(data)) throw new Error('Invalid format');
+        saveDomains(data);
+        resetForm();
+        renderTable();
+        alert('Import successful.');
+      } catch {
+        alert('Import failed. Please upload a valid JSON export from this app.');
+      }
+      e.target.value = '';
+    });
+
+    els.seedBtn.addEventListener('click', () => {
+      saveDomains(sampleData);
+      resetForm();
+      renderTable();
+    });
+
+    if (!loadDomains().length) {
+      els.lastUpdated.value = new Date().toISOString().slice(0, 10);
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>
