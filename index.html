@@ -518,52 +518,79 @@
     };
 
     const sampleData = [
-      {
-        id: crypto.randomUUID(),
-        domainName: 'Claims',
-        owner: 'A. Patel',
-        status: 'Yellow',
-        lastUpdated: '2026-04-20',
-        risk: 'Open dependencies on data mapping and test case completion.',
-        mitigation: 'Complete defect triage and lock cutover checklist by Friday.'
-      },
-      {
-        id: crypto.randomUUID(),
-        domainName: 'Underwriting',
-        owner: 'R. Chen',
-        status: 'Green',
-        lastUpdated: '2026-04-18',
-        risk: 'No material risk; minor UAT items in progress.',
-        mitigation: 'Monitor completion and keep business sign-off on track.'
-      },
-      {
-        id: crypto.randomUUID(),
-        domainName: 'Finance',
-        owner: 'S. Miller',
-        status: 'Red',
-        lastUpdated: '2026-04-19',
-        risk: 'Delayed upstream feed impacting reconciliation and reporting.',
-        mitigation: 'Escalate vendor fix and define manual fallback for month-end.'
-      },
-      {
-        id: crypto.randomUUID(),
-        domainName: 'Policy Admin',
-        owner: 'M. Gomez',
-        status: 'Green',
-        lastUpdated: '2026-04-17',
-        risk: 'Configuration build progressing as planned.',
-        mitigation: 'Maintain current cadence and complete SIT evidence pack.'
-      },
-      {
-        id: crypto.randomUUID(),
-        domainName: 'Data & Reporting',
-        owner: 'K. Brown',
-        status: 'Yellow',
-        lastUpdated: '2026-04-21',
-        risk: 'Reporting backlog and pending sign-off on KPI definitions.',
-        mitigation: 'Prioritize executive dashboards and close metric alignment workshop.'
-      }
-    ];
+  {
+    "id": "1",
+    "domainName": "Period Sales Performance",
+    "owner": "Sales Domain Lead",
+    "status": "Green",
+    "lastUpdated": "2026-04-22",
+    "risk": "Weekly sales momentum is strong and more than half of the period goal was achieved this week",
+    "mitigation": "Maintain current selling cadence and focus leadership attention on end-of-period closures"
+  },
+  {
+    "id": "2",
+    "domainName": "Period Goal Attainment",
+    "owner": "Sales Operations Lead",
+    "status": "Yellow",
+    "lastUpdated": "2026-04-22",
+    "risk": "Overall sales remain behind the full period goal despite strong weekly performance",
+    "mitigation": "Intensify close plans for in-flight deals and review weekly conversion actions with account teams"
+  },
+  {
+    "id": "3",
+    "domainName": "VC Deals Closing This Period",
+    "owner": "VC Sales Lead",
+    "status": "Green",
+    "lastUpdated": "2026-04-22",
+    "risk": "More than $29M in VC deals are expected to close this period, but timing remains critical",
+    "mitigation": "Run daily checkpoint reviews on late-stage VC deals and remove approval bottlenecks quickly"
+  },
+  {
+    "id": "4",
+    "domainName": "FY26 Q&B Pipeline",
+    "owner": "Pipeline Management Lead",
+    "status": "Green",
+    "lastUpdated": "2026-04-22",
+    "risk": "None material; pipeline increased by more than $150M versus last week",
+    "mitigation": "Sustain pipeline generation momentum and validate top opportunities for forecast quality"
+  },
+  {
+    "id": "5",
+    "domainName": "FY26 VC Pipeline",
+    "owner": "VC Growth Lead",
+    "status": "Green",
+    "lastUpdated": "2026-04-22",
+    "risk": "FY26 VC amount is growing strongly, though deal quality and timing should continue to be validated",
+    "mitigation": "Prioritize high-probability opportunities and tighten weekly pipeline hygiene reviews"
+  },
+  {
+    "id": "6",
+    "domainName": "Forecast Projection",
+    "owner": "Finance Business Partner",
+    "status": "Green",
+    "lastUpdated": "2026-04-22",
+    "risk": "FY26 projection is ahead of plan and FY25, but forecast confidence depends on converting expected closes",
+    "mitigation": "Track forecast-to-close variance weekly and escalate slippage risks early"
+  },
+  {
+    "id": "7",
+    "domainName": "Deal Conversion / Close Management",
+    "owner": "Regional Sales Managers",
+    "status": "Yellow",
+    "lastUpdated": "2026-04-22",
+    "risk": "Strong pipeline must convert into actual closes to fully recover the period gap",
+    "mitigation": "Focus on top late-stage deals, executive sponsorship, and faster decision turnaround"
+  },
+  {
+    "id": "8",
+    "domainName": "Pipeline Quality and Governance",
+    "owner": "Sales Excellence Lead",
+    "status": "Yellow",
+    "lastUpdated": "2026-04-22",
+    "risk": "Rapid pipeline growth may mask weaker-quality opportunities if not reviewed consistently",
+    "mitigation": "Perform pipeline scrub on top deals and reinforce qualification standards across teams"
+  }
+];
 
     function loadDomains() {
       try {
