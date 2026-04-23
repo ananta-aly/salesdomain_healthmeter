@@ -68,14 +68,28 @@
       flex-wrap: wrap;
     }
 
+    .actions > button,
+    .actions > .file-label {
+      min-width: 132px;
+    }
+
     button, .file-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 14px;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1;
+      font-weight: 600;
+      white-space: nowrap;
+      text-decoration: none;
       border: 1px solid var(--border);
       background: var(--panel);
       color: var(--text);
-      padding: 10px 14px;
       border-radius: 10px;
       cursor: pointer;
-      font-weight: 600;
       transition: 0.2s ease;
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
     }
@@ -518,88 +532,89 @@
     };
 
     const sampleData = [
-  {
-    "id": "1",
-    "domainName": "Sales Domain - Overall",
-    "owner": "Sales Domain Lead",
-    "status": "Green",
-    "lastUpdated": "2026-04-22",
-    "risk": "Strong momentum across sales and pipeline with positive FY26 outlook. Main focus is ensuring timely conversion of late-stage opportunities to close remaining period gap.",
-    "mitigation": "Maintain strong close-management cadence and leadership focus on top deals."
-  },
-  {
-    "id": "2",
-    "domainName": "Pricing & Sales Strategy",
-    "owner": "Pricing & Sales Strategy Lead",
-    "status": "Green",
-    "lastUpdated": "2026-04-22",
-    "risk": "Strong demand and continued wins, with some delays in client decision cycles.",
-    "mitigation": "Accelerate high-probability deals and continue AI-led positioning."
-  },
-  {
-    "id": "3",
-    "domainName": "Sales Transformation",
-    "owner": "Sales Transformation Lead",
-    "status": "Red",
-    "lastUpdated": "2026-04-22",
-    "risk": "Performance significantly below YTD goal with ~15% YoY decline and gap to target despite strong pipeline.",
-    "mitigation": "Accelerate conversion of late-stage deals and increase leadership oversight on key pursuits."
-  },
-  {
-    "id": "4",
-    "domainName": "Customer Operations / Operate",
-    "owner": "Customer Operations Lead",
-    "status": "Yellow",
-    "lastUpdated": "2026-04-22",
-    "risk": "Operate slightly below target with some softening in expected opportunities.",
-    "mitigation": "Focus on large deals and improve near-term opportunity pipeline."
-  },
-  {
-    "id": "5",
-    "domainName": "Q&B Pipeline",
-    "owner": "Pipeline Management Lead",
-    "status": "Green",
-    "lastUpdated": "2026-04-22",
-    "risk": "Strong pipeline (~$302M+) supporting near-term growth.",
-    "mitigation": "Maintain pipeline quality and executive sponsorship."
-  },
-  {
-    "id": "6",
-    "domainName": "Verbal Commit Pipeline",
-    "owner": "Sales Operations Lead",
-    "status": "Green",
-    "lastUpdated": "2026-04-22",
-    "risk": "Healthy verbal commit (~$99M) with some timing dependencies.",
-    "mitigation": "Drive structured close tracking and remove blockers early."
-  },
-  {
-    "id": "7",
-    "domainName": "Overdue Deals",
-    "owner": "Deal Governance Lead",
-    "status": "Red",
-    "lastUpdated": "2026-04-22",
-    "risk": "High overdue exposure (~$59M, 71 deals) impacting forecast confidence.",
-    "mitigation": "Execute overdue cleanup and enforce deal accountability."
-  },
-  {
-    "id": "8",
-    "domainName": "Growth Platforms",
-    "owner": "Growth Platforms Lead",
-    "status": "Yellow",
-    "lastUpdated": "2026-04-22",
-    "risk": "Mixed performance across platforms with some below target.",
-    "mitigation": "Double down on strong platforms and recover weaker areas."
-  },
-  {
-    "id": "9",
-    "domainName": "AIO Mix",
-    "owner": "Offering Portfolio Lead",
-    "status": "Green",
-    "lastUpdated": "2026-04-22",
-    "risk": "AIO mix stable and improving visibility.",
-    "mitigation": "Continue enforcement and use for strategic planning."
-  }
-];
+      {
+        "id": "1",
+        "domainName": "Sales Domain - Overall",
+        "owner": "Sales Domain Lead",
+        "status": "Green",
+        "lastUpdated": "2026-04-22",
+        "risk": "Strong momentum across sales and pipeline with positive FY26 outlook. Main focus is ensuring timely conversion of late-stage opportunities to close remaining period gap.",
+        "mitigation": "Maintain strong close-management cadence and leadership focus on top deals."
+      },
+      {
+        "id": "2",
+        "domainName": "Pricing & Sales Strategy",
+        "owner": "Pricing & Sales Strategy Lead",
+        "status": "Green",
+        "lastUpdated": "2026-04-22",
+        "risk": "Strong demand and continued wins, with some delays in client decision cycles.",
+        "mitigation": "Accelerate high-probability deals and continue AI-led positioning."
+      },
+      {
+        "id": "3",
+        "domainName": "Sales Transformation",
+        "owner": "Sales Transformation Lead",
+        "status": "Red",
+        "lastUpdated": "2026-04-22",
+        "risk": "Performance significantly below YTD goal with ~15% YoY decline and gap to target despite strong pipeline.",
+        "mitigation": "Accelerate conversion of late-stage deals and increase leadership oversight on key pursuits."
+      },
+      {
+        "id": "4",
+        "domainName": "Customer Operations / Operate",
+        "owner": "Customer Operations Lead",
+        "status": "Yellow",
+        "lastUpdated": "2026-04-22",
+        "risk": "Operate slightly below target with some softening in expected opportunities.",
+        "mitigation": "Focus on large deals and improve near-term opportunity pipeline."
+      },
+      {
+        "id": "5",
+        "domainName": "Q&B Pipeline",
+        "owner": "Pipeline Management Lead",
+        "status": "Green",
+        "lastUpdated": "2026-04-22",
+        "risk": "Strong pipeline (~$302M+) supporting near-term growth.",
+        "mitigation": "Maintain pipeline quality and executive sponsorship."
+      },
+      {
+        "id": "6",
+        "domainName": "Verbal Commit Pipeline",
+        "owner": "Sales Operations Lead",
+        "status": "Green",
+        "lastUpdated": "2026-04-22",
+        "risk": "Healthy verbal commit (~$99M) with some timing dependencies.",
+        "mitigation": "Drive structured close tracking and remove blockers early."
+      },
+      {
+        "id": "7",
+        "domainName": "Overdue Deals",
+        "owner": "Deal Governance Lead",
+        "status": "Red",
+        "lastUpdated": "2026-04-22",
+        "risk": "High overdue exposure (~$59M, 71 deals) impacting forecast confidence.",
+        "mitigation": "Execute overdue cleanup and enforce deal accountability."
+      },
+      {
+        "id": "8",
+        "domainName": "Growth Platforms",
+        "owner": "Growth Platforms Lead",
+        "status": "Yellow",
+        "lastUpdated": "2026-04-22",
+        "risk": "Mixed performance across platforms with some below target.",
+        "mitigation": "Double down on strong platforms and recover weaker areas."
+      },
+      {
+        "id": "9",
+        "domainName": "AIO Mix",
+        "owner": "Offering Portfolio Lead",
+        "status": "Green",
+        "lastUpdated": "2026-04-22",
+        "risk": "AIO mix stable and improving visibility.",
+        "mitigation": "Continue enforcement and use for strategic planning."
+      }
+    ];
+
     function loadDomains() {
       try {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
